@@ -1,0 +1,12 @@
+# Dependency directories
+node_modules
+*package-lock.json*
+
+# environment variables
+.env
+
+# request test
+request
+
+# generate compile build
+dist
