@@ -1,7 +1,6 @@
 # Dependency directories
 node_modules
 *package-lock.json*
-database.options.json
 
 # environment variables
 .env

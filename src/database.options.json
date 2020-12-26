@@ -1,0 +1,9 @@
+{
+    "user": "root",
+    "pass": "6900.$mongodbpass",
+    "authSource": "admin",
+    "useNewUrlParser": true,
+    "useUnifiedTopology": true,
+    "useCreateIndex": true,
+    "useFindAndModify": false
+}
