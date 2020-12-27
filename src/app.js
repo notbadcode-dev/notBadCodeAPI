@@ -3,12 +3,14 @@ import morgan from "morgan";
 import bodyParser from "body-parser";
 import cors from 'cors';
 
+import config from './config';
+
 import AppRoutes from "./routes";
 
 const app = express();
 
 // settings
-app.set("port", process.env.PORT || 3000);
+app.set("port", config.PORT);
 app.set("strict routing", true);
 app.enable('strict routing')
 

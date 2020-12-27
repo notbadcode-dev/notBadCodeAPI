@@ -3,10 +3,10 @@ import config from './config';
 
 (async () => {
     try {
-        const db = await mongoose.connect(config.mongodbURL, {
-            user: 'root',
-            pass: '6900.$mongodbpass',
-            authSource: 'admin',
+        const db = await mongoose.connect(config.MONGO_URL, {
+            // user: 'root',
+            // pass: '6900.$mongodbpass',
+            // authSource: 'admin',
             useNewUrlParser: true,
             useUnifiedTopology: true,
             useCreateIndex: true,
