@@ -3,6 +3,8 @@ import { Router } from 'express';
 import * as authController from '../controllers/auth.controller'
 import { verifySignup } from '../../../middlewares/middleware.index'
 
+import { authValidateRules, validate } from '../validators/authValidators'
+
 const router = Router();
 
 router.use((req, res, next) => {
@@ -13,7 +15,7 @@ router.use((req, res, next) => {
     next();
 });
 
-router.post("/signup", verifySignup.checkDuplicateUsernameOrEmail, authController.signUp);
+router.post("/signup", [authValidateRules(), validate, verifySignup.checkDuplicateUsernameOrEmail], authController.signUp);
 router.post('/signin', verifySignup.existUsernameOrEmail, authController.sigIn)
 
 
