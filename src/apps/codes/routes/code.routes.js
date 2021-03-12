@@ -9,7 +9,7 @@ router.post('/', authJwt.verifyToken, codeController.createCode)
 
 router.get('/', authJwt.verifyToken, codeController.findAllCodes);
 router.get('/paginate', authJwt.verifyToken, codeController.findAllPaginateCodes);
-router.get('/favorites', authJwt.verifyToken, codeController.findAllFavoriteCodes);
+router.get('/famous', authJwt.verifyToken, codeController.findAllFavoriteCodes);
 router.get('/:id', authJwt.verifyToken, codeController.findCodeById);
 
 router.put('/:id', authJwt.verifyToken, codeController.updateCode);

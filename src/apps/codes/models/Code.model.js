@@ -1,7 +1,7 @@
 import { Schema, model } from "mongoose";
 import mongoosePaginate from 'mongoose-paginate-v2'
 
-import { CodeCategories, CodeFormats } from '../enums/codes.global.enums'
+import { CodeCategories, CodeFormats } from '../enums/code.global.enums'
 
 const codeSchema = new Schema({
     title: {

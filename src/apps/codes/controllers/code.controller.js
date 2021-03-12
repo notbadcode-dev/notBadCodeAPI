@@ -1,4 +1,4 @@
-import Code from '../models/Code.model';
+import Code from '../models/code.model';
 
 import { getPagination, getPaginationResult } from '../../../libs/getPagination';
 
@@ -27,7 +27,6 @@ export const findAllCodes = async (req, res) => {
 
 export const findAllPaginateCodes = async (req, res) => {
     try {
-
         const { page,  size, title } = req.query;
         const { limit, offset } = getPagination(page, size);
 
@@ -43,8 +42,12 @@ export const findAllPaginateCodes = async (req, res) => {
 };
 
 export const findAllFavoriteCodes = async (req, res) => {
-    const codes = await Code.find({ isFavorite: true });
-    res.status(200).json(codes)
+    try {
+        const codes = await Code.find({ isFavorite: true });
+        res.status(200).json(codes)
+    } catch (error) {
+        res.status(500).json({ message: error.message || 'Something goes wrong retrieving the codes' });
+    }
 };
 
 export const findCodeById = async (req, res) => {
