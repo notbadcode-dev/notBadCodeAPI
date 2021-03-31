@@ -1,4 +1,5 @@
 import express from "express";
+import expressRateLimit from 'express-rate-limit';
 import morgan from "morgan";
 import bodyParser from "body-parser";
 import cors from 'cors';
@@ -22,6 +23,11 @@ app.use(morgan('dev'));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json({ limit: '100kb' }))
+app.use(bodyParser.json({ parameterLimit: '1000' }))
+
+app.set("trust proxy", true); 
+app.use("/api/", expressRateLimit({ windowMs: 5 * 60 * 1000, max: 100 }));
 
 // routes
 app.get("/", (req, res) => {

@@ -1,14 +1,15 @@
 import { Router } from 'express';
 import CodesRoutes from './apps/codes/routes/code.routes';
-import ColoursRoutes from './apps/colours/routes/palette.routes';
+import PaletteRoutes from './apps/colours/routes/palette.routes';
 import AuthRoutes from './apps/auth/routes/auth.routes';
+import AppRoutes from './apps/auth/routes/app.routes';
 
 
 const router = Router();
 const api = '/api/notbadcode'
-
-router.use(`${api}/app-codes/codes`, CodesRoutes);
-router.use(`${api}/app-colours/colours`, ColoursRoutes);
 router.use(`${api}/auth/`, AuthRoutes);
+router.use(`${api}/app/`, AppRoutes);
+router.use(`${api}/app-colours/palettes`, PaletteRoutes);
+router.use(`${api}/app-codes/codes`, CodesRoutes);
 
 export default router;

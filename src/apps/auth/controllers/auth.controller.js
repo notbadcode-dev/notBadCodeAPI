@@ -1,6 +1,9 @@
 import User from '../models/User.model';
+import App from '../models/App.model';
+
 import jwt from 'jsonwebtoken';
 import config from '../../../config';
+import cryptoJS from 'crypto-js';
 
 export const signUp = async (req, res) => {
     const { username, email, password } = req.body;
@@ -14,7 +17,7 @@ export const signUp = async (req, res) => {
     
         const saveUser = await newUser.save();
         const token = jwt.sign( { id: saveUser._id }, config.AUTH.SECRET,  {
-            expiresIn: config.AUTH.TOKEN_EXPIRE // 24 hours
+            expiresIn: config.AUTH.TOKEN_EXPIRE // 24 Hours
         });
     
         res.status(200).json({ token })
@@ -44,7 +47,7 @@ export const sigIn = async (req, res) => {
             }
     
             const token = jwt.sign( { id: userNameFound._id }, config.AUTH.SECRET,  {
-                expiresIn: config.AUTH.TOKEN_EXPIRE // 24 hours
+                expiresIn: config.AUTH.TOKEN_EXPIRE // 24 Hours
             });
     
             res.status(200).json( { token } );

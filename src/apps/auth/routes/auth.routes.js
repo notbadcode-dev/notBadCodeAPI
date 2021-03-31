@@ -16,7 +16,6 @@ router.use((req, res, next) => {
 });
 
 router.post("/signup", [authValidateRules(), validate, verifySignup.checkDuplicateUsernameOrEmail], authController.signUp);
-router.post('/signin', verifySignup.existUsernameOrEmail, authController.sigIn)
-
+router.post('/signin', verifySignup.existUsernameOrEmail, authController.sigIn);
 
 export default router;
