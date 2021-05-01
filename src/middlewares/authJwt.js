@@ -10,6 +10,7 @@ export const verifyToken = async (req, res, next) => {
   let token = req.headers["authorization"].split(' ')[1];
 
   if (!token) return res.status(403).json({ message: "No token provided" });
+  token = token.split(' ')[1];
 
   try {
     const decode = jwt.verify(token, config.AUTH.SECRET);
@@ -28,8 +29,9 @@ export const verifyToken = async (req, res, next) => {
 };
 
 export const veriryAppToken = async (req, res, next) => {
-  let token = req.headers["authorization"].split(' ')[1];
+  let token = req.headers["authorization"];
   if (!token) return res.status(403).json({ message: "No token provided" });
+  token = token.split(' ')[1];
 
   try {
     // DECRYPTED

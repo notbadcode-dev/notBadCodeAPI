@@ -6,13 +6,13 @@ import { setResponse } from '../../../middlewares/response'
 
 export const createPalette = async (req, res) => {
     if (!req.body.colours) {
-        return res.status(400).json(setResponse(false, ['Content cannot be empty'], error))
+        return res.status(400).json(setResponse(false, ['Content cannot be empty']))
     }
 
     const coloursFound = await Palette.findOne({ colours: req.body.colours });
 
     if (coloursFound !== null) {
-        return res.status(500).json(setResponse(false, ['Palette already exists'], error))
+        return res.status(500).json(setResponse(false, ['Palette already exists']))
     }
 
     try {
