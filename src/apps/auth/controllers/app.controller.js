@@ -7,17 +7,23 @@ import cryptoJS from 'crypto-js';
 export const createApp = async (req, res) => {
     const { id, name } = req.body;
     try {
+
+        const AppFoundId = await App.findOne({ id: id });
+
+        if (AppFoundId !== null) {
+            res.status(400).json({
+                message: 'Application already exist with same id'
+            });
+        } else {
+        }
+    } catch (error) {
         const newApp = new App({
             id: id,
             name: name,
         })
-    
+        
         const saveApp = await newApp.save();
         res.status(200).json({ message:  `App ${saveApp.name} create successfully`})
-    } catch (error) {
-        res.status(500).json({
-            message: error.message || 'Something goes wrong create App'
-        });
     }
 }
 

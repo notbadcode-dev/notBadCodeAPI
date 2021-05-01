@@ -1,7 +1,6 @@
 import { Router } from 'express';
 
 import * as appController from '../controllers/app.controller';
-import * as paletteController from '../../colours/controllers/palette.controller'
 
 const router = Router();
 
