@@ -38,7 +38,6 @@ export const sigIn = async (req, res) => {
             res.status(500).json({ message: 'User not found' });
         } else {
             const matchPassword = await User.comparePassword(password, userNameFound.password );
-
             if (!matchPassword) {
                 return res.status(401).json({
                     token: null,

@@ -7,7 +7,7 @@ import User from '../apps/auth/models/User.model';
 import App from '../apps/auth/models/App.model';
 
 export const verifyToken = async (req, res, next) => {
-  let token = req.headers["x-access-token"];
+  let token = req.headers["authorization"].split(' ')[1];
 
   if (!token) return res.status(403).json({ message: "No token provided" });
 
@@ -28,8 +28,7 @@ export const verifyToken = async (req, res, next) => {
 };
 
 export const veriryAppToken = async (req, res, next) => {
-  let token = req.headers["x-access-token"];
-
+  let token = req.headers["authorization"].split(' ')[1];
   if (!token) return res.status(403).json({ message: "No token provided" });
 
   try {

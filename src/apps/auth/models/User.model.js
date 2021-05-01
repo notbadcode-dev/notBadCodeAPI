@@ -37,7 +37,7 @@ userSchema.statics.encryptPassword = async (password) => {
 };
   
 userSchema.statics.comparePassword = async (password, receivedPassword) => {
-    return await bcrypt.compare(password, receivedPassword)
+    return await bcrypt.compareSync(password.toString().trim(), receivedPassword.toString().trim())
 }
 
 export default model('User', userSchema)
