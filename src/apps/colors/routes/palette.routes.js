@@ -5,18 +5,18 @@ import * as paletteController from '../controllers/palette.controller'
 
 const router = Router();
 
-router.post('/', authJwt.veriryAppToken, paletteController.createPalette)
-router.post('/addLiked', authJwt.veriryAppToken, paletteController.addLikedPalette);
-router.post('/substractLiked', authJwt.veriryAppToken, paletteController.substractLikedPalette);
+router.post('/', paletteController.createPalette)
+router.post('/addLiked', paletteController.addLikedPalette);
+router.post('/substractLiked', paletteController.substractLikedPalette);
 
 
-router.get('/', authJwt.veriryAppToken, paletteController.findAllPalettes);
-router.get('/paginate', authJwt.veriryAppToken, paletteController.findAllPaginatePalettes);
-router.get('/famous', authJwt.veriryAppToken, paletteController.findAllFamousPalettes);
-router.get('/:id', authJwt.veriryAppToken, paletteController.findPaletteById);
+router.get('/', paletteController.findAllPalettes);
+router.get('/paginate', paletteController.findAllPaginatePalettes);
+router.get('/famous', paletteController.findAllFamousPalettes);
+router.get('/:id', paletteController.findPaletteById);
 
-router.put('/:id', authJwt.veriryAppToken, paletteController.updatePalette);
+router.put('/:id', paletteController.updatePalette);
 
-router.delete('/:id', authJwt.veriryAppToken, paletteController.deletePalette)
+router.delete('/:id', paletteController.deletePalette)
 
 export default router;
