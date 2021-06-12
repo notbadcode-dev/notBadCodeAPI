@@ -3,6 +3,7 @@ import Palette from '../models/Palette.model';
 import { getPagination, getPaginationResult } from '../../../libs/getPagination';
 
 import { setResponse } from '../../../middlewares/response'
+import { MessageType } from '../../../common/enums/enums.global';
 
 export const createPalette = async (req, res) => {
     if (!req.body.colours) {
@@ -27,7 +28,7 @@ export const createPalette = async (req, res) => {
 
 export const findAllPalettes = async (req, res) => {
     try {
-        const palettes = await Palette.find()
+        const palettes = await Palette.find({ isFamous: false })
         res.status(200).json(setResponse(palettes))
     } catch (error) {
         res.status(500).json(setResponse(false, ['Something goes wrong retrieving the palettes'], error))
@@ -41,11 +42,12 @@ export const findAllPaginatePalettes = async (req, res) => {
         const { limit, offset } = getPagination(page, size);
 
         const condition = title ? {
-            title: { $regex:  new RegExp(title), $options: "i" }
-        } : { };
+            title: { $regex:  new RegExp(title), $options: "i" },
+            isFamous: false
+        } : { isFamous: false };
 
         const data = await Palette.paginate(condition, { offset, limit })
-        res.status(200).json(setResponse(getPaginationResult(data)))
+        res.status(200).json(setResponse(getPaginationResult(page, data)))
     } catch (error) {
         res.status(500).json(setResponse(false, ['Something goes wrong retrieving the palettes'], error))
     }
@@ -55,6 +57,86 @@ export const findAllFamousPalettes = async (req, res) => {
     try {    
         const palettes = await Palette.find({ isFamous: true });
         res.status(200).json(setResponse(palettes))
+    } catch (error) {
+        res.status(500).json(setResponse(false, ['Something goes wrong retrieving the palettes'], error))
+    }
+};
+
+export const findAllFamousPaginatePalettes = async (req, res) => {
+    try {
+
+        const { page,  size, title } = req.query;
+        const { limit, offset } = getPagination(page, size);
+
+        const condition = title ? {
+            title: { $regex:  new RegExp(title), $options: "i" },
+            isFamous: true
+        } : { isFamous: true };
+
+        const data = await Palette.paginate(condition, { offset, limit })
+        res.status(200).json(setResponse(getPaginationResult(page, data)))
+    } catch (error) {
+        res.status(500).json(setResponse(false, ['Something goes wrong retrieving the palettes'], error))
+    }
+};
+
+export const findAllLikesPalettes = async (req, res) => {
+    try {
+        const { likes } = req.body;
+        if (likes !== undefined) {
+            const palettes = await Palette.find(
+                {
+                    $and: [
+                        { isFamous: false },
+                        { $or: likes.map(like => {
+                                return { _id: like };
+                            })
+                        }
+                    ]
+                }
+            );
+            res.status(200).json(setResponse(palettes))
+        } else {
+            res.status(500).json(setResponse(false, [`You don't likes`], error, MessageType.info))
+        }
+
+    } catch (error) {
+        res.status(500).json(setResponse(false, ['Something goes wrong retrieving the palettes'], error))
+    }
+};
+
+export const findAllLikesPaginatePalettes = async (req, res) => {
+    try {
+        const { likes } = req.body;
+
+        if (likes !== undefined) {
+            const { page,  size, title } = req.query;
+            const { limit, offset } = getPagination(page, size);
+    
+            const condition = title ? {
+                $and: [
+                    { title: { $regex:  new RegExp(title), $options: "i" } },
+                    { isFamous: false },
+                    { $or: likes.map(like => {
+                            return { _id: like };
+                        })
+                    }
+                ]
+            } : {
+                $and: [
+                    { isFamous: false },
+                    { $or: likes.map(like => {
+                            return { _id: like };
+                        })
+                    }
+                ]
+            }
+
+            const data = await Palette.paginate(condition, { offset, limit })
+            res.status(200).json(setResponse(getPaginationResult(page, data)))
+        } else {
+            res.status(500).json(setResponse(false, [`You don't likes`], error, MessageType.info))
+        }
     } catch (error) {
         res.status(500).json(setResponse(false, ['Something goes wrong retrieving the palettes'], error))
     }
@@ -94,43 +176,51 @@ export const deletePalette = async (req, res) => {
 };
 
 export const addLikedPalette = async (req, res) => {
-    const { id } = req.query
+    const { _id } = req.query
     try {
-        const likedPalette = await Palette.findById(id);
+        const likedPalette = await Palette.findById(_id);
         if (likedPalette) {
-            likedPalette.likes = likedPalette.likes + 1;
+            if (!likedPalette.isFamous) {
+                likedPalette.likes = likedPalette.likes + 1;
 
-            const palette = await Palette.findByIdAndUpdate(id, likedPalette);
-            const resultPalette = await Palette.findById(id);
-            res.status(200).json(setResponse([resultPalette], ['Liked palette succesfully']))
+                const palette = await Palette.findByIdAndUpdate(_id, likedPalette);
+                const resultPalette = await Palette.findById(_id);
+                res.status(200).json(setResponse([resultPalette], ['Liked palette succesfully']))
+            } else {
+                res.status(500).json(setResponse(false, ['Cannot liked palette because it is not suitable for it']))
+            }
         } else {
-            res.status(500).json(setResponse(false, [`Cannot liked palette with id ${id}`]))
+            res.status(500).json(setResponse(false, [`Cannot liked palette with id ${_id}`]))
         }
 
     } catch (error) {
-        res.status(500).json(setResponse(false, [`Cannot liked palette with id ${id}`], error))
+        res.status(500).json(setResponse(false, [`Cannot liked palette with id ${_id}`], error))
     }
 };
 
 export const substractLikedPalette = async (req, res) => {
-    const { id } = req.query
+    const { _id } = req.query
     try {
-        const unlikedPalette = await Palette.findById(id);
+        const unlikedPalette = await Palette.findById(_id);
 
         if (unlikedPalette) {
-            if (unlikedPalette.likes > 0) {
-                unlikedPalette.likes = unlikedPalette.likes - 1;
-
-                const palette = await Palette.findByIdAndUpdate(unlikedPalette._id, unlikedPalette);
-                const resultPalette = await Palette.findById(id);
-                res.status(200).json(setResponse([resultPalette], ['Unliked palette succesfully']))
+            if (!unlikedPalette.isFamous) {
+                if (unlikedPalette.likes > 0) {
+                    unlikedPalette.likes = unlikedPalette.likes - 1;
+    
+                    const palette = await Palette.findByIdAndUpdate(unlikedPalette._id, unlikedPalette);
+                    const resultPalette = await Palette.findById(_id);
+                    res.status(200).json(setResponse([resultPalette], ['Unliked palette succesfully']))
+                } else {
+                    res.status(500).json(setResponse(false, [`Cannot unliked palette because likes it is less than 0`]))
+                }
             } else {
-                res.status(500).json(setResponse(false, [`Cannot unliked palette with because likes it is less than 0`]))
+                res.status(500).json(setResponse(false, ['Cannot unliked palette because it is not suitable for it']))
             }
         } else {
-            res.status(500).json(setResponse(false, [`Cannot unliked palette with id ${id}`], error))
+            res.status(500).json(setResponse(false, [`Cannot unliked palette with id ${_id}`], error))
         }
     } catch (error) {
-        res.status(500).json(setResponse(false, [`Cannot unliked palette with id ${id}`], error))
+        res.status(500).json(setResponse(false, [`Cannot unliked palette with id ${_id}`], error))
     }
 };

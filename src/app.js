@@ -17,8 +17,20 @@ app.set("strict routing", true);
 app.enable('strict routing')
 
 // middlewares
-const corsOptions = {};
-app.use(cors(corsOptions))
+var allowedOrigins = ['http://localhost:4200', 'http://192.168.1.102:4200'];
+app.use(cors('*', {
+  origin: function(origin, callback) {
+    console.log(origin)
+    if(!origin) return callback(null, true);
+    if(allowedOrigins.indexOf(origin) === -1){
+      var msg = 'The CORS policy for this site does not ' +
+                'allow access from the specified Origin.';
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
+  exposedHeaders: ['X-Auth'],
+}));
 
 app.use(morgan('dev'));
 
@@ -42,7 +54,7 @@ app.use("/api/notbadcode/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument
 
 // routes
 app.get("/", (req, res) => {
-  res.json({ message: "Welcome to my application" });
+  res.json({ message: "Notbadcode API" });
 });
 
 app.use('/', AppRoutes);

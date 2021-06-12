@@ -1,10 +1,13 @@
 import { MessageType } from '../common/enums/enums.global'
 
-export const setResponse = (_data, _messages, _error) => {
+export const setResponse = (_data, _messages, _error, messageType) => {
     if (_error && _error.message) {
         return {
             data: false,
-            messages: [{ message: _error.message, messageType: MessageType.error }]
+            messages: [{ 
+                message: _error.message,
+                messageType: messageType !== undefined ? messageType : MessageType.error
+            }]
         }
     } else {
         if (_messages) {

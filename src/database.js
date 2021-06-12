@@ -12,7 +12,10 @@ import config from './config';
             useCreateIndex: true,
             useFindAndModify: false
         });
-        console.info('Connect to database:', db.connection.name);
+        console.info('|       Connect to database: '+db.connection.name+'     |');
+        console.info('|                                           |');
+        console.info('+-------------------------------------------+');
+
     } catch (error) {
         console.error(error);
     }
