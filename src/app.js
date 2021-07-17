@@ -20,7 +20,6 @@ app.enable('strict routing')
 var allowedOrigins = ['http://localhost:4200', 'http://192.168.1.102:4200'];
 app.use(cors('*', {
   origin: function(origin, callback) {
-    console.log(origin)
     if(!origin) return callback(null, true);
     if(allowedOrigins.indexOf(origin) === -1){
       var msg = 'The CORS policy for this site does not ' +

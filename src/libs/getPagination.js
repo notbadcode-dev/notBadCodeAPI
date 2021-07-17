@@ -6,7 +6,6 @@ export const getPagination = (page, take) => {
 };
 
 export const getPaginationResult = (page, data) => {
-    console.log(data)
     if (data) {
         return {
             totalItems: data.totalDocs,
