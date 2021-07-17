@@ -1,4 +1,4 @@
-import Code from '../models/code.model';
+import Code from '../models/Code.model';
 
 import { getPagination, getPaginationResult } from '../../../libs/getPagination';
 
